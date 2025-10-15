@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, TextInput, Button, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { ScrollView, View, Text, TextInput, Button, StyleSheet, ActivityIndicator, Alert, useColorScheme } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth, API_URL } from '../../context/AuthContext';
 
-// alamat IP yang dari komputer ( IPv4 Address)
-const API_URL = 'http:// 192.168.16.190:8000'; 
-
-// Fungsi async untuk mengambil detail aset dari API berdasarkan kode (nibar/barcode)
+// Async function to fetch asset details from the API
 const fetchAssetDetails = async (code: string, token: string) => {
   try {
     const response = await fetch(`${API_URL}/api/find/${code}`, {
@@ -19,8 +16,9 @@ const fetchAssetDetails = async (code: string, token: string) => {
   }
 };
 
-// Komponen untuk menampilkan satu baris detail aset (label dan nilainya)
-const DetailRow = ({ label, value, isEditing, onChangeText }) => {
+// Component for a single row of data
+const DetailRow = ({ label, value, isEditing, onChangeText, styles }) => {
+    // Hide internal fields
     if (['id', 'created_at', 'updated_at', 'barcode'].includes(label)) {
         return null;
     }
@@ -37,7 +35,7 @@ const DetailRow = ({ label, value, isEditing, onChangeText }) => {
     );
 };
 
-// Komponen layar utama untuk menampilkan dan mengedit detail aset
+// Main screen component
 export default function AssetDetailScreen() {
   const { nibar: code } = useLocalSearchParams<{ nibar: string }>();
   const router = useRouter();
@@ -47,6 +45,10 @@ export default function AssetDetailScreen() {
   const [originalData, setOriginalData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
+  const styles = getStyles(isDarkMode);
 
   useEffect(() => {
     if (!code || !session) return;
@@ -65,12 +67,10 @@ export default function AssetDetailScreen() {
     loadData();
   }, [code, session]);
 
-  // THIS FUNCTION IS NOW RESTRICTED AGAIN
+  // --- CHANGE IS HERE: All fields are now editable by default ---
   const handleInputChange = (field, text) => {
-    const editableFields = ['lokasi', 'nama_pemakai', 'status_pemakai', 'jabatan', 'keterangan'];
-    if (editableFields.includes(field)) {
-        setAssetData(prevData => ({ ...prevData, [field]: text }));
-    }
+    // We simply update the state for any field that changes.
+    setAssetData(prevData => ({ ...prevData, [field]: text }));
   };
 
   const handleSave = async () => {
@@ -106,19 +106,30 @@ export default function AssetDetailScreen() {
     }
   };
   
+  // Instead of an "editable" list, we define what should NEVER be edited.
+  const nonEditableFields = ['nibar', 'kode_barang'];
+
   const getEditableStatus = (key) => {
-    const editableFields = ['lokasi', 'nama_pemakai', 'status_pemakai', 'jabatan', 'keterangan'];
-    return isEditing && editableFields.includes(key);
+    // A field is editable if the app is in "edit mode" AND the key is NOT in our non-editable list.
+    return isEditing && !nonEditableFields.includes(key);
   }
+  // --- END OF CHANGE ---
 
   if (isLoading) {
-    return <View style={styles.centered}><ActivityIndicator size="large" /><Text>Fetching asset data...</Text></View>;
+    return <View style={styles.centered}><ActivityIndicator size="large" /><Text style={styles.loadingText}>Fetching asset data...</Text></View>;
   }
 
   return (
     <ScrollView style={styles.container}>
       {assetData && Object.entries(assetData).map(([key, value]) => (
-        <DetailRow key={key} label={key} value={value} isEditing={getEditableStatus(key)} onChangeText={(text) => handleInputChange(key, text)} />
+        <DetailRow 
+            key={key} 
+            label={key} 
+            value={value} 
+            isEditing={getEditableStatus(key)} // This function now has the new logic
+            onChangeText={(text) => handleInputChange(key, text)}
+            styles={styles}
+        />
       ))}
       <View style={styles.buttonContainer}>
         {isEditing ? (
@@ -135,13 +146,48 @@ export default function AssetDetailScreen() {
   );
 }
 
-// Stylesheet untuk mengatur tampilan komponen di layar ini
-const styles = StyleSheet.create({
-  centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  container: { flex: 1, backgroundColor: '#f8f9fa' },
-  row: { paddingHorizontal: 15, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#dee2e6', backgroundColor: 'white' },
-  label: { fontSize: 12, color: '#6c757d', marginBottom: 4, fontWeight: 'bold' },
-  value: { fontSize: 16, color: '#212529' },
-  input: { fontSize: 16, color: '#212529', borderWidth: 1, borderColor: '#ced4da', borderRadius: 5, padding: 8, backgroundColor: '#fff' },
-  buttonContainer: { margin: 20 },
+// Stylesheet with dark mode support
+const getStyles = (isDarkMode) => StyleSheet.create({
+  centered: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    backgroundColor: isDarkMode ? '#111827' : '#f3f4f6',
+  },
+  loadingText: {
+    color: isDarkMode ? '#d1d5db' : '#4b5563',
+  },
+  container: { 
+    flex: 1, 
+    backgroundColor: isDarkMode ? '#111827' : '#f3f4f6',
+  },
+  row: { 
+    paddingHorizontal: 15, 
+    paddingVertical: 12, 
+    borderBottomWidth: 1, 
+    borderBottomColor: isDarkMode ? '#374151' : '#e5e7eb', 
+    backgroundColor: isDarkMode ? '#1f2937' : 'white',
+  },
+  label: { 
+    fontSize: 12, 
+    color: isDarkMode ? '#9ca3af' : '#6b7280', 
+    marginBottom: 4, 
+    fontWeight: 'bold' 
+  },
+  value: { 
+    fontSize: 16, 
+    color: isDarkMode ? '#f9fafb' : '#1f2937' 
+  },
+  input: { 
+    fontSize: 16, 
+    color: isDarkMode ? '#f9fafb' : '#111827', 
+    borderWidth: 1, 
+    borderColor: isDarkMode ? '#4b5563' : '#ced4da', 
+    borderRadius: 5, 
+    padding: 8, 
+    backgroundColor: isDarkMode ? '#374151' : '#fff'
+  },
+  buttonContainer: { 
+    margin: 20 
+  },
 });
