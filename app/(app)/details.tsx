@@ -46,9 +46,11 @@ export default function AssetDetailScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
 
+  // --- CHANGE FOR DARK MODE ---
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
-  const styles = getStyles(isDarkMode);
+  const styles = getStyles(isDarkMode); // Get dynamic styles
+  // --- END OF CHANGE ---
 
   useEffect(() => {
     if (!code || !session) return;
@@ -67,10 +69,11 @@ export default function AssetDetailScreen() {
     loadData();
   }, [code, session]);
 
-  // --- CHANGE IS HERE: All fields are now editable by default ---
   const handleInputChange = (field, text) => {
-    // We simply update the state for any field that changes.
-    setAssetData(prevData => ({ ...prevData, [field]: text }));
+    const editableFields = ['lokasi', 'nama_pemakai', 'status_pemakai', 'jabatan', 'keterangan'];
+    if (editableFields.includes(field)) {
+        setAssetData(prevData => ({ ...prevData, [field]: text }));
+    }
   };
 
   const handleSave = async () => {
@@ -106,14 +109,10 @@ export default function AssetDetailScreen() {
     }
   };
   
-  // Instead of an "editable" list, we define what should NEVER be edited.
-  const nonEditableFields = ['nibar', 'kode_barang'];
-
   const getEditableStatus = (key) => {
-    // A field is editable if the app is in "edit mode" AND the key is NOT in our non-editable list.
-    return isEditing && !nonEditableFields.includes(key);
+    const editableFields = ['lokasi', 'nama_pemakai', 'status_pemakai', 'jabatan', 'keterangan'];
+    return isEditing && editableFields.includes(key);
   }
-  // --- END OF CHANGE ---
 
   if (isLoading) {
     return <View style={styles.centered}><ActivityIndicator size="large" /><Text style={styles.loadingText}>Fetching asset data...</Text></View>;
@@ -126,9 +125,9 @@ export default function AssetDetailScreen() {
             key={key} 
             label={key} 
             value={value} 
-            isEditing={getEditableStatus(key)} // This function now has the new logic
+            isEditing={getEditableStatus(key)} 
             onChangeText={(text) => handleInputChange(key, text)}
-            styles={styles}
+            styles={styles} // Pass dynamic styles to the child component
         />
       ))}
       <View style={styles.buttonContainer}>
@@ -146,7 +145,7 @@ export default function AssetDetailScreen() {
   );
 }
 
-// Stylesheet with dark mode support
+// --- STYLESHEET UPDATED FOR DARK MODE ---
 const getStyles = (isDarkMode) => StyleSheet.create({
   centered: { 
     flex: 1, 
