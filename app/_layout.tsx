@@ -2,14 +2,12 @@ import { Slot } from "expo-router";
 import { AuthProvider, useAuth, useProtectedRoute } from "../context/AuthContext";
 import { ActivityIndicator, View } from "react-native";
 
+// komponen utama 
 function ProtectedLayout() {
-  // Get both session and isLoading from the context
   const { session, isLoading } = useAuth();
 
-  // Pass both arguments to the protection hook
   useProtectedRoute(session, isLoading);
 
-  // While the auth state is loading, show a spinner
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -22,6 +20,7 @@ function ProtectedLayout() {
   return <Slot />;
 }
 
+// Komponen layout root dari seluruh aplikasi
 export default function RootLayout() {
   return (
     <AuthProvider>

@@ -4,17 +4,18 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useRouter } from 'expo-router';
 import type { BarcodeScanningResult } from 'expo-camera';
 
+// Mengambil lebar layar perangkat untuk menghitung ukuran kotak scan secara dinamis
 const { width } = Dimensions.get('window');
 const scanBoxWidth = width * 0.7;
 const scanBoxHeight = width * 0.5;
 
+// Komponen utama untuk layar scan
 export default function ScannerScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [manualNibar, setManualNibar] = useState(''); // State for the manual input
   const router = useRouter();
 
-  // This function is now used by both the scanner and manual input
   const navigateToDetails = (nibar: string) => {
     if (!nibar.trim()) {
         Alert.alert("Input Error", "Please enter a barcode number.");
@@ -27,7 +28,7 @@ export default function ScannerScreen() {
   };
 
   const handleBarCodeScanned = (scanningResult: BarcodeScanningResult) => {
-    if (scanningResult.data && !scanned) { // Check !scanned to prevent multiple scans
+    if (scanningResult.data && !scanned) { 
       navigateToDetails(scanningResult.data);
     }
   };
@@ -94,6 +95,7 @@ export default function ScannerScreen() {
   );
 }
 
+// Kumpulan styles untuk mengatur tampilan komponen di layar ini
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 

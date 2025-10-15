@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet, Button, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 
+// komponen utama
 export default function ResetPasswordScreen() {
   const router = useRouter();
 
   const onResetPress = () => {
-    // In a real app, you would send the new password and a reset token to your backend.
     Alert.alert(
       'Password Updated',
       'Your password has been successfully reset. Please login with your new password.',
@@ -26,6 +26,7 @@ export default function ResetPasswordScreen() {
   );
 }
 
+// Kumpulan styles untuk mengatur tampilan komponen di layar ini
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#FFFFFF' },
   title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginBottom: 24 },

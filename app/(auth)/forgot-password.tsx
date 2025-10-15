@@ -2,16 +2,15 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet, Button, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 
+// komponen utama
 export default function ForgotPasswordScreen() {
   const router = useRouter();
 
   const onSendLinkPress = () => {
-    // In a real app, this would trigger a backend API to send an email.
     Alert.alert(
       'Check Your Email',
       'If an account with this email exists, a password reset link has been sent. (This is a simulation).',
       [
-        // We navigate to the reset screen to simulate the user clicking the link in the email.
         { text: 'OK', onPress: () => router.push('/reset-password') },
       ]
     );
@@ -35,6 +34,7 @@ export default function ForgotPasswordScreen() {
   );
 }
 
+// Kumpulan styles untuk mengatur tampilan komponen di layar ini
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#FFFFFF' },
   title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginBottom: 12 },

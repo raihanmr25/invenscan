@@ -3,9 +3,10 @@ import { ScrollView, View, Text, TextInput, Button, StyleSheet, ActivityIndicato
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 
-// IMPORTANT: Make sure this is your computer's correct IP address.
-const API_URL = 'http://192.168.16.13:8000'; 
+// alamat IP yang dari komputer ( IPv4 Address)
+const API_URL = 'http:// 192.168.16.190:8000'; 
 
+// Fungsi async untuk mengambil detail aset dari API berdasarkan kode (nibar/barcode)
 const fetchAssetDetails = async (code: string, token: string) => {
   try {
     const response = await fetch(`${API_URL}/api/find/${code}`, {
@@ -18,6 +19,7 @@ const fetchAssetDetails = async (code: string, token: string) => {
   }
 };
 
+// Komponen untuk menampilkan satu baris detail aset (label dan nilainya)
 const DetailRow = ({ label, value, isEditing, onChangeText }) => {
     if (['id', 'created_at', 'updated_at', 'barcode'].includes(label)) {
         return null;
@@ -35,6 +37,7 @@ const DetailRow = ({ label, value, isEditing, onChangeText }) => {
     );
 };
 
+// Komponen layar utama untuk menampilkan dan mengedit detail aset
 export default function AssetDetailScreen() {
   const { nibar: code } = useLocalSearchParams<{ nibar: string }>();
   const router = useRouter();
@@ -103,7 +106,6 @@ export default function AssetDetailScreen() {
     }
   };
   
-  // THIS FUNCTION IS NOW RESTRICTED AGAIN
   const getEditableStatus = (key) => {
     const editableFields = ['lokasi', 'nama_pemakai', 'status_pemakai', 'jabatan', 'keterangan'];
     return isEditing && editableFields.includes(key);
@@ -133,6 +135,7 @@ export default function AssetDetailScreen() {
   );
 }
 
+// Stylesheet untuk mengatur tampilan komponen di layar ini
 const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   container: { flex: 1, backgroundColor: '#f8f9fa' },

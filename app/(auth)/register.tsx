@@ -1,16 +1,15 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-// We no longer need useAuth here since we are not logging in directly
 
+// path untuk logo
 const dinasLogo = require('../../assets/logodisnaker.png'); 
 
+// komponen utama
 export default function RegisterScreen() {
   const router = useRouter();
 
   const onRegisterPress = () => {
-    // In a real app, you would save the new user to a database via an API call.
-    // For now, we show a success message and send the user to the login page.
     Alert.alert(
       'Success',
       'Account created! Please log in.',
@@ -45,7 +44,7 @@ export default function RegisterScreen() {
   );
 }
 
-// ... your existing styles
+// komponen styles untuk mengatur tampilan komponen di layar ini
 const styles = StyleSheet.create({
   fullScreenContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0A2533', },
   cardContainer: { width: '90%', maxWidth: 380, backgroundColor: '#FFFFFF', borderRadius: 20, paddingVertical: 30, paddingHorizontal: 25, alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 8, },

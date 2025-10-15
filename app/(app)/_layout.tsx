@@ -6,13 +6,16 @@ import { useAuth } from '../../context/AuthContext';
 export default function AppLayout() {
   const { signOut } = useAuth();
 
+// Stack navigator digunakan untuk mengatur layar-layar dalam aplikasi.
+// Setiap `Stack.Screen` merepresentasikan satu layar.
   return (
     <Stack>
       <Stack.Screen 
         name="index" 
         options={{ 
           headerShown: true,
-          title: "Selamat Datang",
+          title: "InvenScan",
+          headerLeft: () => <LogoTitle />,
           headerRight: () => <Button onPress={signOut} title="Logout" />
         }} 
       />

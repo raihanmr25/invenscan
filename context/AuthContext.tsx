@@ -3,8 +3,8 @@ import React from "react";
 import * as SecureStore from 'expo-secure-store';
 
 const TOKEN_KEY = 'api-auth-token';
-// IMPORTANT: Make sure this is your computer's correct IP address.
-const API_URL = 'http://192.168.16.13:8000'; 
+// alamat IP yang dari komputer ( IPv4 Address)
+const API_URL = 'http:// 192.168.16.190:8000'; 
 
 const AuthContext = React.createContext<{ session?: string | null; signIn: (email, password) => Promise<boolean>; signOut: () => void; isLoading: boolean; } | null>(null);
 

@@ -1,13 +1,19 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-// Note: We are not using the Checkbox for the real login, so it can be removed if you want.
-// For now, we'll leave the UI but not use its value.
 import Checkbox from 'expo-checkbox'; 
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'expo-router';
 
+/**
+     * Email dan password yang digunakan untuk login
+     * Email: test@example.com
+     * Password: Test!234
+     */
+
+// path untuk logo
 const dinasLogo = require('../../assets/logodisnaker.png'); 
 
+// komponen utama
 export default function LoginScreen() {
   const [username, setUsername] = React.useState(''); // This state holds the email
   const [password, setPassword] = React.useState('');
@@ -16,7 +22,6 @@ export default function LoginScreen() {
   const { signIn } = useAuth();
   const router = useRouter();
 
-  // THIS IS THE CORRECTED FUNCTION
   const onLoginPress = async () => {
     setIsLoading(true); // Start loading
     try {
@@ -90,7 +95,7 @@ export default function LoginScreen() {
   );
 }
 
-// ... your existing styles
+// Kumpulan styles untuk mengatur tampilan komponen di layar ini
 const styles = StyleSheet.create({
   fullScreenContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0A2533', },
   cardContainer: { width: '90%', maxWidth: 380, backgroundColor: '#FFFFFF', borderRadius: 20, paddingVertical: 30, paddingHorizontal: 25, alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 10, elevation: 8, },
